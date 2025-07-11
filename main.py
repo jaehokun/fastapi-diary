@@ -1,4 +1,6 @@
 # main.py
+import os
+import json
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -10,8 +12,9 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Firebase 초기화
-cred = credentials.Certificate("firebase_config.json")
+# ✅ Firebase 초기화 - Render 환경변수 사용하도록 변경
+firebase_json = os.environ.get("FIREBASE_CONFIG")
+cred = credentials.Certificate(json.loads(firebase_json))
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://maindb-7e3b4-default-rtdb.asia-southeast1.firebasedatabase.app"
 })
