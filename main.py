@@ -14,7 +14,9 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # ✅ Firebase 초기화 - Render 환경변수 사용하도록 변경
 firebase_json = os.environ.get("FIREBASE_CONFIG")
-cred = credentials.Certificate(json.loads(firebase_json))
+cred_dict = json.loads(firebase_json)
+cred_dict["private_key"] = cred_dict["private_key"].replace("\\n", "\n")  # 🔧 핵심 수정
+cred = credentials.Certificate(cred_dict)
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://maindb-7e3b4-default-rtdb.asia-southeast1.firebasedatabase.app"
 })
